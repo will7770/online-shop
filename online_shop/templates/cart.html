@@ -1,56 +1,23 @@
+{% extends "base.html" %}
 {% load static %}
 
-<div class="card mb-3 text-bg-light shadow-lg">
-    {% for item in cart %}
-        <div class="card-header">
-            <h5 class="card-title">{{ item.contents.name }}</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <div class="row text-center">
-                    <div class="col p-0">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm decrement"
-                                    data-cart-id="{{ item.id }}"
-                                    data-cart-change-url="{% url "cart_change" item.id %}">
-                                    {% csrf_token %}
-                                    -</button>
-                            </span>
-                            <input type="text" class="form-control number" value="{{ item.quantity }}"
-                                readonly>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm increment"
-                                    data-cart-id="{{ item.id }}"
-                                    data-cart-change-url="{% url "cart_change" item.id %}">
-                                    {% csrf_token %}
-                                    +</button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col p-0">
-                        <p>x {{ item.contents.sell_price }} = </p>
-                    </div>
-                    <div class="col p-0"><strong> {{ item.total_item_price }} $</strong></div>
-                    <div class="col p-0">
-                        <a href="{% url "cart_delete" item.id %}" class="remove-from-cart"
-                        data-cart-id="{{ item.id }}">
-                            {% csrf_token %}
-                            <img class="mx-1" src="{% static "deps/icons/trash3-fill.svg" %}"
-                                alt="Catalog Icon" width="16" height="16">
-                        </a>
-                    </div>
+
+{% block content %}
+<div class="row">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                <h3 class="text-center mb-4">Shopping cart</h3>
+                <div class="container" id="cart-items-container">
+                    <!-- Разметка корзины -->
+                    {% include "includes/included_cart.html" %}
+                    <!-- Закончилась разметка корзины -->
                 </div>
-            </li>
-        </ul>
-    {% endfor %}
-</div>
-<div class="card mb-3 shadow-lg">
-    <div class="card-footer">
-        <p class="float-left">Итого <strong>{{ cart.total_items }}</strong> товар(а) на сумму</p>
-        <h4 class="float-left"><strong>{{ cart.total_price }} $</strong></h4>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock  %}
 
 
 

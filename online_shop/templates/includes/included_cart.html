@@ -3,7 +3,7 @@
 <div class="card mb-3 text-bg-light shadow-lg">
     {% for cart in carts %}
         <div class="card-header">
-            <h5 class="card-title">{{ cart.contents.title }}</h5>
+            <h5 class="card-title">{{cart.contents.title}}</h5>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
@@ -12,43 +12,35 @@
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-dark btn-sm decrement"
-                                    data-cart-id="{{ cart.id }}"
-                                    data-cart-change-url="{% url "cart" %}">
-                                    {% csrf_token %}
-                                    -</button>
+                                    data-cart-id="" data-cart-change-url="">-</button>
                             </span>
-                            <input type="text" class="form-control number" value="{{ cart.quantity }}"
+                            <input type="text" class="form-control number" value={{cart.quantity}}
                                 readonly>
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-dark btn-sm increment"
-                                    data-cart-id="{{ cart.id }}"
-                                    data-cart-change-url="{% url "cart" %}">
-                                    {% csrf_token %}
-                                    +</button>
+                                    data-cart-id="" data-cart-change-url="">+</button>
                             </span>
                         </div>
                     </div>
                     <div class="col p-0">
-                        <p>x {{ cart.contents.sell_price }} = </p>
+                        <p>{{cart.contents.price}}$</p>
                     </div>
-                    <div class="col p-0"><strong> {{cart.products_price}} $</strong></div>
+                    <div class="col p-0"><strong> = {{cart.total_item_price}}$</strong></div>
                     <div class="col p-0">
-                        <a href="{% url "cart" %}" class="remove-from-cart"
-                        data-cart-id="{{ cart.id }}">
-                            {% csrf_token %}
-                            <img class="mx-1" src="{% static "deps/icons/trash3-fill.svg" %}"
-                                alt="Catalog Icon" width="16" height="16">
+                        <a href="#" class="remove-from-cart" data-cart-id="1">
+                            {% comment %} <img class="mx-1" src="{% static "deps/icons/trash3-fill.svg" %}" {% endcomment %}
+                                {% comment %} alt="Catalog Icon" width="16" height="16"> {% endcomment %}
                         </a>
                     </div>
                 </div>
             </li>
         </ul>
-    {% endfor %}
-</div>
+    </div>
+{% endfor %}
 <div class="card mb-3 shadow-lg">
     <div class="card-footer">
-        <p class="float-left">Итого <strong>{{ carts.total_items }}</strong> товар(а) на сумму</p>
-        <h4 class="float-left"><strong>{{ carts.total_price }} $</strong></h4>
+        <p class="float-left">Total <strong>{{carts.total_items}}</strong> items for</p>
+        <h4 class="float-left"><strong>{{carts.total_price}}$</strong></h4>
     </div>
 </div>
 {% comment %} {% if carts and not orders%}

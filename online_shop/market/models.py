@@ -1,19 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class CartQuery(models.QuerySet):
 
-    def total_items(self):
-        if self:
-            return sum(cart.quantity for cart in self)
-        return 0
-    
-    def total_price(self):
-        return sum(cart.total_item_price() for cart in self)
 
 class Categories(models.Model):
     name = models.CharField(max_length=150, unique=True, verbose_name='Name')
-    category_slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name='URL')
+    category_slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
 
     class Meta:
         db_table = 'Category'
@@ -31,8 +23,8 @@ class Item(models.Model):
     image = models.ImageField(blank = True, null = True)
     rating = models.FloatField(blank = True)
     sale = models.DecimalField(default=0.00, max_digits=4, decimal_places=2)
-    category = models.ForeignKey(to=Categories, on_delete=models.CASCADE, verbose_name='Категория')
-    slug = models.SlugField(max_length = 200, unique = True, blank = True, null = True, verbose_name = 'Item_URL')
+    category = models.ForeignKey(to=Categories, on_delete=models.CASCADE, verbose_name='Category')
+    slug = models.SlugField(max_length = 200, unique = True, blank = True, null = True)
 
     class Meta:
         db_table = 'Items'
@@ -56,11 +48,26 @@ class Item(models.Model):
         return self.price
         
 
+class CartQuery(models.QuerySet):
+
+    def total_items(self):
+        if self:
+            return sum(cart.quantity for cart in self)
+        return 0
+    
+    def total_price(self):
+        return sum(cart.total_item_price() for cart in self)
+
 class Cart(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     contents = models.ForeignKey(to=Item, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
     session_key = models.CharField(max_length=35, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Cart'
+        verbose_name_plural = 'Cart'
 
     def __str__(self):
         if self.user:
