@@ -100,7 +100,7 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#cartModal">
                         <img class="mx-1" src="{% static "cart.png" %}" alt="Cart" width="24" height="24">
-                        <span id="goods-in-cart-count">0</span>
+                        <span id="goods-in-cart-count">{% display_cart_quantity request%}</span>
                     </button>
                 </div>
             </div>

@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% load tags %}
+
+{% block "modal_cart" %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+
 {% block content %}
 <div class="row">
     <!-- Форма фильтров -->
@@ -75,7 +81,7 @@
                     {% else %}
                     <p><strong>{{ product.price }} $</strong></p>
                     {% endif %}
-                    <a href="{% url "cart_add" product.id %}" class="btn">
+                    <a href="{% url "cart_add" product.slug %}" class="btn">
                         <img class="mx-1" src="{% static "cart.png" %}" alt="Catalog Icon"
                             width="32" height="32">
                     </a>

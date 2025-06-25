@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_list_or_404
+from django.shortcuts import redirect, render, get_list_or_404
 from .models import Categories, Item, Cart
 from django.http import JsonResponse
 from .utils import get_user_carts, query_search
@@ -41,18 +41,28 @@ def product(request, slug):
 
 
 def cart_view(request):
-    carts = Cart.objects.filter(user=request.user)
-    context = {'carts': carts}
-    return render(request, 'cart.html', context=context)
+    return render(request, 'cart.html')
 
 
-def cart_add(request, product_id):
+def cart_add(request, product_slug):
+    if request.user.is_authenticated:
+        product = Item.objects.filter(slug=product_slug).first()
+        cart_product, created = Cart.objects.get_or_create(user=request.user, contents=product, defaults={"quantity": 1})
+        if not created:
+            cart_product.quantity += 1
+            cart_product.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+
+def cart_change(request, product_slug):
     pass
 
 
-def cart_change(request, product_id):
-    pass
+def cart_delete(request, product_slug):
+    if request.user.is_authenticated:
+        product = Item.objects.get(slug=product_slug)
+        cart_product = Cart.objects.filter(user=request.user, contents=product).first()
+        cart_product.delete()
 
-
-def cart_delete(request, product_id):
-    pass
+        return redirect(request.META['HTTP_REFERER'])
