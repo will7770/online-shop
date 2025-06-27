@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .utils import get_user_carts, query_search
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
+from django.views.decorators.http import require_POST
 
 
 def catalog(request, slug=None):
@@ -44,15 +45,21 @@ def cart_view(request):
     return render(request, 'cart.html')
 
 
-def cart_add(request, product_slug):
+@require_POST
+def cart_add(request):
     if request.user.is_authenticated:
-        product = Item.objects.filter(slug=product_slug).first()
+        product = Item.objects.filter(id=request.POST.get('product_id')).first()
         cart_product, created = Cart.objects.get_or_create(user=request.user, contents=product, defaults={"quantity": 1})
         if not created:
             cart_product.quantity += 1
             cart_product.save()
-
-        return redirect(request.META['HTTP_REFERER'])
+        
+        rendered_cart = render_to_string("includes/included_cart.html", request=request)
+        response = {
+            "message": "Added item to cart",
+            "cart_items_html": rendered_cart
+        }
+        return JsonResponse(response)
 
 
 def cart_change(request, product_slug):

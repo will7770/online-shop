@@ -2,9 +2,9 @@
 {% load static %}
 {% load tags %}
 
-{% block "modal_cart" %}
+{% comment %} {% block "modal_cart" %}
 {% include "includes/cart_button.html" %}
-{% endblock  %}
+{% endblock  %} {% endcomment %}
 
 
 {% block content %}
@@ -81,7 +81,8 @@
                     {% else %}
                     <p><strong>{{ product.price }} $</strong></p>
                     {% endif %}
-                    <a href="{% url "cart_add" product.slug %}" class="btn">
+                    <a href="{% url "cart_add" %}" class="btn add-to-cart" data-product-id="{{product.id}}" data-url="{% url "cart_add" %}">
+                        {% csrf_token %}
                         <img class="mx-1" src="{% static "cart.png" %}" alt="Catalog Icon"
                             width="32" height="32">
                     </a>

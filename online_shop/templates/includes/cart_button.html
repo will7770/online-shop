@@ -3,12 +3,12 @@
 
 {% user_carts request as carts %}
 
-
- <!-- Cart Button - Fixed with proper modal trigger attributes -->
+<!-- Cart Button - Fixed with proper modal trigger attributes -->
 <div>
     <button type="button" class="btn btn-dark btn-secondary d-flex" 
             data-bs-toggle="modal" 
-            data-bs-target="#cartModal">
+            data-bs-target="#cartModal"
+            id="cartModalButton">
         <img class="mx-1" src="{% static "cart.png" %}" alt="Cart" width="24" height="24">
         <span id="goods-in-cart-count">{% display_cart_quantity request %}</span>
     </button>
