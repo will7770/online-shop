@@ -62,14 +62,25 @@ def cart_add(request):
         return JsonResponse(response)
 
 
-def cart_change(request, product_slug):
-    pass
-
-
-def cart_delete(request, product_slug):
+@require_POST
+def cart_change(request):
     if request.user.is_authenticated:
-        product = Item.objects.get(slug=product_slug)
-        cart_product = Cart.objects.filter(user=request.user, contents=product).first()
-        cart_product.delete()
+        cart_id, quantity = request.POST['cart_id'], request.POST['quantity']
+        Cart.objects.filter(id=cart_id).update(quantity=quantity)
 
-        return redirect(request.META['HTTP_REFERER'])
+        rendered_cart = render_to_string('includes/included_cart.html', request=request)
+        response = {
+            "cart_items_html": rendered_cart
+        }
+        return JsonResponse(response)
+
+@require_POST
+def cart_delete(request):
+    if request.user.is_authenticated:
+        cart_product = Cart.objects.filter(user=request.user, id=request.POST.get('cart_id')).first()
+        cart_product.delete()
+        
+        rendered_cart = render_to_string("includes/included_cart.html", request=request)
+        response = {"message": "Deleted item from cart",
+                "cart_items_html": rendered_cart}
+        return JsonResponse(response)
