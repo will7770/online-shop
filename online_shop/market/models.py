@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 
 
@@ -59,7 +59,7 @@ class CartQuery(models.QuerySet):
         return sum(cart.total_item_price() for cart in self)
 
 class Cart(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     contents = models.ForeignKey(to=Item, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)

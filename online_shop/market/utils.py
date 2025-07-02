@@ -5,9 +5,9 @@ def get_user_carts(request):
     if request.user.is_authenticated:
         return Cart.objects.filter(user=request.user).select_related('contents')
     
-    if not request.session.session_key:
+    elif not request.session.session_key:
         request.session.create()
-    return Cart.objects.filter(session_key=request.session.session_key).select_related('contents')
+        return Cart.objects.filter(session_key=request.session.session_key).select_related('contents')
 
 
 def query_search(query):

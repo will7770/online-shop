@@ -24,7 +24,7 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
             <div class="container">
-                <a class="navbar-brand" href="{% url "catalog" 'all' %}">Catalog</a>
+                <a class="navbar-brand" href="{% url "main:catalog" 'all' %}">Catalog</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -40,15 +40,15 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item text-white" href="#">Payment and delivery</a></li>
                                 <li><a class="dropdown-item text-white" href="#">Contact information</a></li>
-                                <li><a class="dropdown-item text-white" href="{% url "catalog" 'all' %}">About us</a></li>
+                                <li><a class="dropdown-item text-white" href="{% url "main:catalog" 'all' %}">About us</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'cart' %}">Cart</a>
+                            <a class="nav-link text-white" href="{% url 'main:cart' %}">Cart</a>
                         </li>
                         {% if not user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="users/login.html">Log in</a>
+                            <a class="nav-link text-white" href={% url "users:login" %}>Log in</a>
                         </li>
                         {% else %}
                         <li class="nav-item dropdown">
@@ -57,18 +57,18 @@
                                 My profile
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item text-white" href="{% url "cart" %}">Cart</a></li>
+                                <li><a class="dropdown-item text-white" href="{% url "main:cart" %}">Cart</a></li>
                                 <li><a class="dropdown-item text-white" href="users/profile.html">Profile</a></li>
                                 {% if user.is_admin or user.is_staff %}
                                 <li><a class="dropdown-item text-white" href="/admin/">Admin panel</a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-white" href="#">Log out</a></li>
+                                <li><a class="dropdown-item text-white" href="{% url "users:logout" %}">Log out</a></li>
                             </ul>
                         </li>
                         {% endif %}
                     </ul>
-                    <form class="d-flex" role="search" action="{% url "search" %}" method="get">
+                    <form class="d-flex" role="search" action="{% url "main:search" %}" method="get">
                         <input class="form-control me-2" type="search" name="q" placeholder="..." aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
@@ -89,39 +89,25 @@
                     <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
                         {% tag_categories as categories %}
                         {% for category in categories %}
-                            <li><a class="dropdown-item text-white" href="{% url "catalog" category.category_slug %}">{{category.name}}</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url "main:catalog" category.category_slug %}">{{category.name}}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
                 
                 <!-- Cart Button - Fixed with proper modal trigger attributes -->
-                 {% block modal_cart %}{% endblock %}
+                {% comment %} {% block modal_cart %}{% endblock %} {% endcomment %}
                 <div>
                     <button type="button" class="btn btn-dark btn-secondary d-flex" 
                             id="cartModalButton"
                             data-bs-toggle="modal" 
                             data-bs-target="#cartModal">
                         <img class="mx-1" src="{% static "cart.png" %}" alt="Cart" width="24" height="24">
-                        <span id="goods-in-cart-count">{% display_cart_quantity request %}</span>
+                        {% display_cart_items request as carts %}
+                        <span id="goods-in-cart-count">{{ carts.total_quantity }}</span>
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- Main Content -->
-        <div class="container">
-            <div class="row mt-1">
-                <div class="col-lg-2">
-                    <!-- Empty space -->
-                </div>
-                <div class="col-lg-10">
-                    <!-- Notifications block -->
-                    {% include "includes/notifications.html" %}
-                    {% block content %}{% endblock %}
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Cart Modal - Placed at root level -->
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
@@ -142,6 +128,41 @@
             </div>
         </div>
     </div>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="row mt-1">
+                <div class="col-lg-2">
+                    <!-- Empty space -->
+                </div>
+                <div class="col-lg-10">
+                    <!-- Notifications block -->
+                    {% include "includes/notifications.html" %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Modal - Placed at root level -->
+    {% comment %} <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Shopping cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" id="cart-items-container">
+                        {% include "includes/included_cart.html" %}
+                    </div>
+                    <a class="btn btn-dark" href="orders/create_order.html">
+                        Order
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
 
     {% block footer %}{% endblock %}
 

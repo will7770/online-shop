@@ -1,6 +1,6 @@
 from django import template
 from django.utils.http import urlencode
-
+from ..utils import get_user_carts
 from market.models import Categories, Cart
 
 
@@ -21,11 +21,4 @@ def change_params(context, **kwargs):
 
 @register.simple_tag()
 def display_cart_items(request):
-    user = request.user
-    return Cart.objects.filter(user=user).select_related('contents')
-
-
-@register.simple_tag()
-def display_cart_quantity(request):
-    user = request.user
-    return Cart.objects.filter(user=user).total_items()
+    return get_user_carts(request)

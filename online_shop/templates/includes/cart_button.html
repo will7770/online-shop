@@ -1,33 +1,37 @@
 {% load static %}
 {% load tags %}
 
-{% user_carts request as carts %}
+{% display_cart_items request as carts %}
 
-<!-- Cart Button - Fixed with proper modal trigger attributes -->
 <div>
-    <button type="button" class="btn btn-dark btn-secondary d-flex" 
-            data-bs-toggle="modal" 
-            data-bs-target="#cartModal"
-            id="cartModalButton">
-        <img class="mx-1" src="{% static "cart.png" %}" alt="Cart" width="24" height="24">
-        <span id="goods-in-cart-count">{% display_cart_quantity request %}</span>
+    <button type="button" class="btn btn-dark btn-secondary d-flex" id="cartModalButton"
+        aria-expanded="false">
+        <img class="mx-1" src="{% static "cart.png" %}" alt="Catalog Icon" width="24"
+            height="24">
+        <span id="goods-in-cart-count">{{ carts.total_quantity }}</span>
     </button>
 </div>
-<!-- Cart Modal - Placed at root level -->
-<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+<!-- Разметка модального окна корзины -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="cartModalLabel">Shopping cart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <h3 class="text-center mb-4">Корзина</h3>
                 <div class="container" id="cart-items-container">
+                    <!-- Разметка корзины -->
                     {% include "includes/included_cart.html" %}
+                    <!-- Закончилась разметка корзины -->
                 </div>
-                <a class="btn btn-dark" href="orders/create_order.html">
-                    Order
-                </a>
+                {% if carts %}
+                    <a class="btn btn-dark" href="orders/create_order.html">
+                        Оформить заказ
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

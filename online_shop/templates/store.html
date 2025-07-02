@@ -16,7 +16,7 @@
             Filters
         </button>
    
-    <form action="{% if request.GET.q %}{% url "search" %} {% else %}{% url "catalog" slug_url %} {% endif %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
+    <form action="{% if request.GET.q %}{% url "main:search" %} {% else %}{% url "main:catalog" slug_url %} {% endif %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
         <div class="form-check text-white mx-3">
             <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on" {% if request.GET.on_sale == 'on' %}checked{% endif %}>
             {% if request.GET.q %}
@@ -69,7 +69,7 @@
         <div class="card border-primary rounded custom-shadow">
             <img src="{{ product.image_url }}" class="thumbnail" >
             <div class="card-body">
-                <a href="{% url "product" product.slug %}">
+                <a href="{% url "main:product" product.slug %}">
                     <p class="card-title text-black">{{ product.title }}</p>
                 </a>
                 <p class="product_id">ID: {{ product.id }}</p>
@@ -81,7 +81,7 @@
                     {% else %}
                     <p><strong>{{ product.price }} $</strong></p>
                     {% endif %}
-                    <a href="{% url "cart_add" %}" class="btn add-to-cart" data-product-id="{{product.id}}">
+                    <a href="{% url "main:cart_add" %}" class="btn add-to-cart" data-product-id="{{product.id}}">
                         {% csrf_token %}
                         <img class="mx-1" src="{% static "cart.png" %}" alt="Catalog Icon"
                             width="32" height="32">

@@ -15,7 +15,7 @@
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-dark btn-sm decrement"
                                 data-cart-id="{{ cart.id }}"
-                                data-cart-change-url="{% url "cart_change" %}">
+                                data-cart-change-url="{% url "main:cart_change" %}">
                                 {% csrf_token %}
                                 -</button>
 
@@ -25,7 +25,7 @@
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-dark btn-sm increment"
                                 data-cart-id="{{ cart.id }}" 
-                                data-cart-change-url="{% url "cart_change" %}">
+                                data-cart-change-url="{% url "main:cart_change" %}">
                                 {% csrf_token %}
                                 +</button>
 
@@ -37,7 +37,7 @@
                 </div>
                 <div class="col p-0"><strong> = {{ cart.total_item_price }}$</strong></div>
                 <div class="col p-0">
-                    <a href="{% url "cart_delete" %}" class="remove-from-cart" data-cart-id="{{ cart.id }}">
+                    <a href="{% url "main:cart_delete" %}" class="remove-from-cart" data-cart-id="{{ cart.id }}">
                         {% csrf_token %}
                         <img class="mx-1" src="{% static "trash_bin.png" %}"
                             alt="Remove" width="16" height="16">
