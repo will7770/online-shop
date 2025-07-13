@@ -4,6 +4,8 @@ from django.contrib import messages, auth
 from django.urls import reverse
 from .forms import UserLogin, UserAuthentication, UserProfile
 from market.models import Cart
+from orders.models import Order, OrderItem
+from django.db.models import Prefetch
 
 
 def register(request):
@@ -53,7 +55,23 @@ def login(request):
 
 @login_required
 def profile(request):
-    pass
+    if request.method == 'POST':
+        form = UserProfile(data=request.POST, instance=request.user, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully')
+
+            return redirect(reverse('users:profile'))
+
+    else:
+        form = UserProfile(files=request.FILES, instance=request.user)
+    orders = Order.objects.filter(user=request.user).prefetch_related(Prefetch('orderitem_set',
+                                                                               queryset=OrderItem.objects.prefetch_related('product'),
+                                                                               ))
+    context = {'form': form,
+               'orders': orders}
+    return render(request, 'users/profile.html', context=context)
+
 
 @login_required
 def logout(request):

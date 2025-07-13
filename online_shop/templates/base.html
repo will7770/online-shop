@@ -58,7 +58,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item text-white" href="{% url "main:cart" %}">Cart</a></li>
-                                <li><a class="dropdown-item text-white" href="users/profile.html">Profile</a></li>
+                                <li><a class="dropdown-item text-white" href="{% url "users:profile" %}">Profile</a></li>
                                 {% if user.is_admin or user.is_staff %}
                                 <li><a class="dropdown-item text-white" href="/admin/">Admin panel</a></li>
                                 {% endif %}
@@ -93,41 +93,16 @@
                         {% endfor %}
                     </ul>
                 </div>
-                
-                <!-- Cart Button - Fixed with proper modal trigger attributes -->
-                {% comment %} {% block modal_cart %}{% endblock %} {% endcomment %}
-                <div>
-                    <button type="button" class="btn btn-dark btn-secondary d-flex" 
-                            id="cartModalButton"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#cartModal">
-                        <img class="mx-1" src="{% static "cart.png" %}" alt="Cart" width="24" height="24">
-                        {% display_cart_items request as carts %}
-                        <span id="goods-in-cart-count">{{ carts.total_quantity }}</span>
-                    </button>
-                </div>
+
+                <!-- Cart Button -->
+                {% block "cart_button" %}{% endblock %}
             </div>
         </div>
 
     <!-- Cart Modal - Placed at root level -->
-    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cartModalLabel">Shopping cart</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container" id="cart-items-container">
-                        {% include "includes/included_cart.html" %}
-                    </div>
-                    <a class="btn btn-dark" href="orders/create_order.html">
-                        Order
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% block "cart_modal" %}{% endblock "cart_modal" %}
+
+
 
         <!-- Main Content -->
         <div class="container">
@@ -143,26 +118,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Cart Modal - Placed at root level -->
-    {% comment %} <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cartModalLabel">Shopping cart</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container" id="cart-items-container">
-                        {% include "includes/included_cart.html" %}
-                    </div>
-                    <a class="btn btn-dark" href="orders/create_order.html">
-                        Order
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div> {% endcomment %}
 
     {% block footer %}{% endblock %}
 

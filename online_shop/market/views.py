@@ -52,9 +52,6 @@ def cart_view(request):
 
 @require_POST
 def cart_add(request):
-    if not request.session.session_key:
-        request.session.create()
-    
     with transaction.atomic():
         product = Item.objects.filter(id=request.POST.get('product_id')).first()
         if request.user.is_authenticated:
@@ -62,7 +59,7 @@ def cart_add(request):
         else:
             if not request.session.session_key:
                 request.session.create()
-                user_session = request.session.session_key
+            user_session = request.session.session_key
             cart_product, created = Cart.objects.select_for_update().get_or_create(session_key=user_session, contents=product, defaults={'quantity': 1})
         
         if not created:

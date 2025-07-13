@@ -36,7 +36,7 @@
             <p class="card-text">Price: <strong>{{ product.sell_price }} $</strong></p>
             <h5 class="card-title">{{ product.title }}</h5>
             <p class="card-text">{{ product.description }}.</p>
-            <a href="{% url "cart_add" %}" class="btn btn-dark add-to-cart" data-product-id={{product.id}}>
+            <a href="{% url "main:cart_add" %}" class="btn btn-dark add-to-cart" data-product-id={{product.id}}>
             {% csrf_token %}
             Add to cart</a>
         </div>

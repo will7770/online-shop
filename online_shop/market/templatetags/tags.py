@@ -22,3 +22,4 @@ def change_params(context, **kwargs):
 @register.simple_tag()
 def display_cart_items(request):
     return get_user_carts(request)
+

@@ -1,0 +1,25 @@
+<!-- separate cart modal window -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-center mb-4">Cart</h3>
+                <div class="container" id="cart-items-container">
+                    <!-- cart -->
+                    {% include "includes/included_cart.html" %}
+                    
+                </div>
+                {% if carts %}
+                    <a class="btn btn-dark" href="orders/create_order.html">
+                        Order
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

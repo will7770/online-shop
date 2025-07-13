@@ -54,8 +54,8 @@
         <h4 class="float-left"><strong>{{carts.total_price}}$</strong></h4>
     </div>
 </div>
-{% comment %} {% if carts and not orders%}
+{% if carts and '/order/' not in request.path %}
 <a class="btn btn-dark" href="{% url "orders:create_order" %}">
-    Оформить заказ
+    Order
 </a>
-{% endif %} {% endcomment %}
+{% endif %}

@@ -2,9 +2,12 @@
 {% load static %}
 {% load tags %}
 
-{% comment %} {% block "modal_cart" %}
+{% block "cart_button" %}
 {% include "includes/cart_button.html" %}
-{% endblock  %} {% endcomment %}
+{% endblock  %}
+{% block "cart_modal" %}
+{% include "includes/cart_modal.html" %}
+{% endblock %}
 
 
 {% block content %}

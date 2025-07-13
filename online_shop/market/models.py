@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 
 
@@ -14,6 +15,10 @@ class Categories(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse("main:product/", kwargs={"slug": self.category_slug})
+    
 
 class Item(models.Model):
     title = models.CharField(max_length = 100, blank = False)
@@ -72,7 +77,7 @@ class Cart(models.Model):
     def __str__(self):
         if self.user:
             return f"Cart: {self.user} / Contents: {self.contents.title} / Quantity: {self.quantity}"
-        return f"Anonymous / Contents: {self.contents.title} / Quantity: {self.quantity}"
+        return f"Cart: Anonymous / Contents: {self.contents.title} / Quantity: {self.quantity}"
     
     def total_item_price(self):
         return round(self.contents.sell_price() * self.quantity, 2)
