@@ -6,6 +6,7 @@ from .forms import UserLogin, UserAuthentication, UserProfile
 from market.models import Cart
 from orders.models import Order, OrderItem
 from django.db.models import Prefetch
+from django.core.cache import cache
 
 
 def register(request):
@@ -65,9 +66,10 @@ def profile(request):
 
     else:
         form = UserProfile(files=request.FILES, instance=request.user)
-    orders = Order.objects.filter(user=request.user).prefetch_related(Prefetch('orderitem_set',
+    data = Order.objects.filter(user=request.user).prefetch_related(Prefetch('orderitem_set',
                                                                                queryset=OrderItem.objects.prefetch_related('product'),
                                                                                ))
+    orders = cache.get_or_set(f'users:orders:{request.session.session_key}', list(data), 15)
     context = {'form': form,
                'orders': orders}
     return render(request, 'users/profile.html', context=context)

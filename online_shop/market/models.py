@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
-
+from django.core.cache import cache
 
 
 class Categories(models.Model):
@@ -26,8 +26,8 @@ class Item(models.Model):
     description = models.CharField(max_length = 200, blank = False)
     quantity = models.IntegerField(blank = False)
     image = models.ImageField(blank = True, null = True)
-    rating = models.FloatField(blank = True)
-    sale = models.DecimalField(default=0.00, max_digits=4, decimal_places=2)
+    rating = models.FloatField(blank = True, null=True)
+    sale = models.DecimalField(default=0.00, max_digits=4, decimal_places=2, null=True)
     category = models.ForeignKey(to=Categories, on_delete=models.CASCADE, verbose_name='Category')
     slug = models.SlugField(max_length = 200, unique = True, blank = True, null = True)
 

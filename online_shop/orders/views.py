@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import ValidationError
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from .forms import OrderForm
@@ -9,6 +9,7 @@ from django.db import transaction
 from .models import Order, OrderItem
 from market.models import Cart, Item
 from django.db.models import F
+from django.core.cache import cache
 
 
 class CreateOrder(FormView, LoginRequiredMixin):
@@ -50,6 +51,9 @@ class CreateOrder(FormView, LoginRequiredMixin):
                     
                     OrderItem.objects.bulk_create(new_orders)
                     user_cart.delete()
+
+                    # delete cached data
+                    cache.delete(f'users:orders:{self.request.session.session_key}')
 
                     messages.success(self.request, 'Order created successfully')
                     return redirect('users:profile')

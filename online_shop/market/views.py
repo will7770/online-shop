@@ -7,6 +7,8 @@ from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.db.models import F
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 
 
 
@@ -33,7 +35,6 @@ def catalog(request, slug=None):
     paginator = Paginator(goods, 3)
     current_page = paginator.page(int(page))
 
-
     context = {
         'goods': current_page,
         'slug_url': slug
@@ -41,6 +42,7 @@ def catalog(request, slug=None):
     return render(request, 'store.html', context=context)
 
 
+@cache_page(60 * 30)
 def product(request, slug):
     product = Item.objects.get(slug=slug)
     return render(request, 'product.html', context={'product': product})

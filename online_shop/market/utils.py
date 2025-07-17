@@ -1,5 +1,8 @@
 from .models import Cart, Item
 from django.db.models import Q
+from django.contrib.postgres.search import SearchVector
+from django.core.cache import cache
+
 
 def get_user_carts(request):
     if request.user.is_authenticated:
@@ -15,11 +18,5 @@ def query_search(query):
     if query.isdigit() and len(query) <= 5:
         return Item.objects.filter(id=int(query))
     
-    keywords = [word for word in query.split() if len(word) > 2]
-    q_obj = Q()
-
-    for keyword in keywords:
-        q_obj |= Q(description__icontains=keyword)
-        q_obj |= Q(title__icontains=keyword)
-
-    return Item.objects.filter(q_obj)
+    qset = Item.objects.annotate(searchv=SearchVector('title', 'description')).filter(searchv=query)
+    return qset
