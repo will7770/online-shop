@@ -8,10 +8,11 @@ class RegisterItem(admin.ModelAdmin):
     list_display = ["title", "quantity", "price", "sale"]
     list_editable = ["sale",]
     search_fields = ["name", "description"]
-    list_filter = ["sale", "quantity", "category"]
+    list_filter = ["sale", "quantity", "category", "rating"]
     fields = [
         "title",
         "category",
+        "rating",
         "slug",
         "description",
         "image",

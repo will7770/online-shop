@@ -14,25 +14,6 @@
                 <form action="{% url "users:register" %}" method="post">
                     {% csrf_token %}
                     <div class="row">
-                        {% comment %} <div class="col-md-6 mb-3">
-                            <label for="id_first_name" class="form-label">Имя*</label>
-                            <input type="text" class="form-control" id="id_first_name"
-                                value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}"
-                                name="first_name"
-                                placeholder="Введите ваше имя" required>
-                                {% if form.first_name.errors %}
-                                <div class="alert alert-danger alert-dismissible fade show">{{form.first_name.errors}}</div>
-                                {% endif %}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="id_last_name" class="form-label">Фамилия*</label>
-                            <input type="text" class="form-control" id="id_last_name"
-                                value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}"
-                                name="last_name"
-                                placeholder="Введите вашу фамилию" required>
-                                {% if form.last_name.errors %}
-                                <div class="alert alert-danger alert-dismissible fade show">{{form.last_name.errors}}</div>
-                                {% endif %} {% endcomment %}
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="id_username" class="form-label">Username</label>

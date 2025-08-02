@@ -1,29 +1,31 @@
-from django.shortcuts import redirect, render, get_list_or_404
+from django.shortcuts import render
 from .models import Categories, Item, Cart
 from django.http import JsonResponse
-from .utils import get_user_carts, query_search
+from .utils import query_search
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.db import transaction
-from django.db.models import F
+from django.db.models import F, Prefetch
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
+from reviews.forms import ReviewForm
+from reviews.models import Review
 
 
 
 def catalog(request, slug=None):
     page = request.GET.get('page', 1)
     on_sale = request.GET.get('on_sale', None)
-    order_by = request.GET.get('order_by', None)
+    order_by = request.GET.get('order_by', 'id')
     query = request.GET.get('q', None)
 
     slug = slug or 'all'
 
-    if slug == 'all':
-        goods = Item.objects.all()
-    elif query:
+    if query:
         goods = query_search(query)
+    elif slug == 'all':
+        goods = Item.objects.all()
     else:
         goods = Item.objects.filter(category__category_slug=slug)
 
@@ -42,10 +44,33 @@ def catalog(request, slug=None):
     return render(request, 'store.html', context=context)
 
 
-@cache_page(60 * 30)
+
 def product(request, slug):
-    product = Item.objects.get(slug=slug)
-    return render(request, 'product.html', context={'product': product})
+    sorting_method = request.GET.get('sort_by', 'newest')
+    base_queryset = Review.objects.all()
+
+    if sorting_method == 'newest':
+        base_queryset = base_queryset.order_by('-created_at')
+    elif sorting_method == 'oldest':
+        base_queryset = base_queryset.order_by('created_at')
+    elif sorting_method == 'highest':
+        base_queryset = base_queryset.order_by('-rating')
+    elif sorting_method == 'lowest':
+        base_queryset = base_queryset.order_by('rating')
+
+
+    product = Item.objects.filter(slug=slug).prefetch_related(Prefetch('reviews', queryset=base_queryset)).first()
+    review_percentages_qs = Review.objects.reviews_percentage(item_slug=slug)
+
+    review_percentages = cache.get_or_set(f'review_percentages:{slug}', list(review_percentages_qs), timeout=60*30)
+
+    context = {
+        'product': product,
+        'form': ReviewForm(),
+        'percentages': review_percentages
+    }
+
+    return render(request, 'product.html', context=context)
 
 
 def cart_view(request):

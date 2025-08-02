@@ -19,13 +19,15 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
+      - ./:/code
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgres://shop_admin:1029384756@db:5432/market
       - DEBUG=1
       - REDIS_URL=redis://redis:6379/0
+      - DJANGO_SECRET_KEY=django-insecure-dfi_ulau1xn1ufm7_h*#azt%513c=e*%imo&7qx4f6xe#%05oq
+      - DJANGO_DEBUG=False
     depends_on:  
       - db
 

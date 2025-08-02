@@ -1,0 +1,70 @@
+<style>
+    .custom-shadow {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: none;
+        border-radius: 10px;
+    }
+    
+    .rating-input .bi {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .rating-input .bi:hover,
+    .rating-input .bi.active {
+        color: #ffc107 !important;
+    }
+    
+    .reviews-container {
+        scrollbar-width: thin;
+        scrollbar-color: #ccc #f8f9fa;
+    }
+    
+    .reviews-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .reviews-container::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    
+    .reviews-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+    
+    .reviews-container::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+    }
+    
+    .review-item:last-child {
+        border-bottom: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    
+    .sticky-top {
+        position: sticky;
+        z-index: 1;
+    }
+</style>
+
+<style>
+ .rating-input .form-check-input {
+    display: none; /* Hide actual radio buttons */
+}
+
+.rating-input .rating-label {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #ddd; /* Default empty star color */
+    transition: color 0.2s;
+}
+
+.rating-input .form-check-input:checked + .rating-label,
+.rating-input .rating-label:hover {
+    color: #ffc107; /* Yellow for selected/hovered stars */
+}
+</style>
+

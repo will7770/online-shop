@@ -9,9 +9,9 @@
             <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
                 <h3 class="text-center mb-4">Shopping cart</h3>
                 <div class="container" id="cart-items-container">
-                    <!-- Разметка корзины -->
+                    <!-- Cart -->
                     {% include "includes/included_cart.html" %}
-                    <!-- Закончилась разметка корзины -->
+                    <!-- End of cart html -->
                 </div>
             </div>
         </div>
@@ -19,10 +19,3 @@
 </div>
 {% endblock  %}
 
-
-
-{% comment %} {% if cart and not orders %}
-<a class="btn btn-dark" href="{% url "create_order" %}">
-    Оформить заказ
-</a>
-{% endif %} {% endcomment %}

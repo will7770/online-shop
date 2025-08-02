@@ -69,7 +69,7 @@ def profile(request):
     data = Order.objects.filter(user=request.user).prefetch_related(Prefetch('orderitem_set',
                                                                                queryset=OrderItem.objects.prefetch_related('product'),
                                                                                ))
-    orders = cache.get_or_set(f'users:orders:{request.session.session_key}', list(data), 15)
+    orders = cache.get_or_set(f'users:orders:{request.session.session_key}', list(data), 60*15)
     context = {'form': form,
                'orders': orders}
     return render(request, 'users/profile.html', context=context)

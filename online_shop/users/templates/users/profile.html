@@ -6,7 +6,7 @@
 <div class="row">
     <div class="container mt-5">
         <div class="row">
-            <!-- Профиль с данными пользователя -->
+            <!-- Profile -->
 <div class="col-md-5">
     <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
         <h3 class="text-center mb-4">Profile</h3>
@@ -93,24 +93,24 @@
         </form>
     </div>
 </div>
-            <!-- Корзина -->
+            <!-- Cart items -->
             {% display_cart_items request as carts %}
 
             <div class="col-md-7">
                 <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
                     <h3 class="text-center mb-4">Cart</h3>
                     <div class="container" id="cart-items-container">
-                        <!-- Разметка корзины -->
+                        <!-- Cart -->
                         {% include "includes/included_cart.html" %}
-                        <!-- Закончилась разметка корзины -->
+                        <!-- End cart html -->
                     </div>
                 </div>
             </div>
-            <!-- Оформленные заказы -->
+            <!-- Orders -->
             <div class="col-md-12">
                 <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
                     <h3 class="text-center mb-4">My orders</h3>
-                    <!-- Разметка заказов -->
+                    <!-- Orders html -->
                     <div class="container">
                         <div class="accordion" id="accordionExample">
                             {% for order in orders %}

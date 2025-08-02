@@ -51,7 +51,12 @@ class Item(models.Model):
         if self.sale:
             return round(self.price - self.price*self.sale / 100, 2) 
         return self.price
-        
+    
+    def update_rating(self):
+        result = self.reviews.aggregate(average=models.Avg('rating'))
+        self.rating = result['average']
+        self.save()
+
 
 class CartQuery(models.QuerySet):
 

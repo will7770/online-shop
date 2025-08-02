@@ -5,7 +5,11 @@
 {% for cart in carts %}
 <div class="card mb-3 text-bg-light shadow-lg">
     <div class="card-header">
-        <h5 class="card-title">{{cart.contents.title}}</h5>
+        <h5 class="card-title">
+            <a href="{% url 'main:product' cart.contents.slug %}" class="text-decoration-none text-dark">
+                {{cart.contents.title}}
+            </a>
+        </h5>
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item">
