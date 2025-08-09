@@ -1,8 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django import forms
-from django.contrib import auth
 from .models import User
-
+from django.core.exceptions import ValidationError
 
 
 class UserAuthentication(UserCreationForm):
@@ -17,9 +16,20 @@ class UserAuthentication(UserCreationForm):
         )
 
         username = forms.CharField()
-        email = forms.CharField()
-        password1 = forms.CharField()
-        password2 = forms.CharField()
+        email = forms.EmailField()
+        password1 = forms.IntegerField()
+        password2 = forms.IntegerField()
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        email_taken = User.objects.filter(email=email).exists()
+        if email_taken:
+            raise ValidationError("Email is already in use")
+        return email
+
+
+class EmailVerification(forms.Form):
+    verification_code = forms.IntegerField()
 
 
 class UserLogin(AuthenticationForm):
@@ -47,3 +57,24 @@ class UserProfile(UserChangeForm):
     last_name = forms.CharField(required=False)
     username = forms.CharField()
     email = forms.CharField()
+
+
+class EmailForPasswordReset(forms.Form):
+    email = forms.EmailField()
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        associated_account = User.objects.filter(email=email).exists()
+        if associated_account:
+            return email
+
+
+class PasswordReset(forms.Form):
+    password1 = forms.CharField()
+    password2 = forms.CharField()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('password1') != cleaned_data.get('password2'):
+            raise ValidationError("Passwords don't match")
+        return cleaned_data
