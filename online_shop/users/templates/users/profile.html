@@ -37,6 +37,31 @@
                     {% endif %}
                 </div>
                 
+                <!-- Unchangeable Account Info Section -->
+                <div class="col-md-12 mb-4">
+                    <h5 class="text-muted">Account Information</h5>
+                    <div class="border-bottom mb-3"></div>
+                    
+                    <!-- Username Display -->
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <div class="form-control-plaintext bg-light p-2 rounded">
+                            {{ user.username }}
+                        </div>
+                        <input type="hidden" name="username" value="{{ user.username }}">
+                    </div>
+                    
+                    <!-- Email Display -->
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <div class="form-control-plaintext bg-light p-2 rounded">
+                            {{ user.email }}
+                        </div>
+                        <input type="hidden" name="email" value="{{ user.email }}">
+                    </div>
+                </div>
+                
+                <!-- Editable Profile Fields -->
                 <div class="col-md-12 mb-3">
                     <label for="id_first_name" class="form-label">First name</label>
                     <input type="text" 
@@ -59,32 +84,6 @@
                         value="{{ form.initial.last_name|default:request.user.last_name|default:'' }}"
                         >
                     {% for error in form.last_name.errors %}
-                        <div class="invalid-feedback">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                                
-                <div class="col-md-12 mb-3">
-                    <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                    <input type="text" 
-                           class="form-control {% if request.method == 'POST' %}{% if form.username.errors %}is-invalid{% endif %}{% endif %}" 
-                           id="{{ form.username.id_for_label }}"
-                           name="username"
-                           value="{{ form.instance.username|default_if_none:'' }}"
-                           required>
-                    {% for error in form.username.errors %}
-                        <div class="invalid-feedback">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                
-                <div class="col-md-12 mb-3">
-                    <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-                    <input type="email" 
-                           class="form-control {% if request.method == 'POST' %}{% if form.email.errors %}is-invalid{% endif %}{% endif %}" 
-                           id="{{ form.email.id_for_label }}"
-                           name="email"
-                           value="{{ form.instance.email|default_if_none:'' }}"
-                           required>
-                    {% for error in form.email.errors %}
                         <div class="invalid-feedback">{{ error }}</div>
                     {% endfor %}
                 </div>

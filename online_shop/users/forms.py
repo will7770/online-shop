@@ -48,15 +48,11 @@ class UserProfile(UserChangeForm):
         fields = (
             "profile_pic",
             "first_name",
-            "last_name",
-            "username",
-            "email",)
+            "last_name",)
 
     profile_pic = forms.ImageField(required=False)
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
-    username = forms.CharField()
-    email = forms.CharField()
 
 
 class EmailForPasswordReset(forms.Form):
@@ -64,7 +60,7 @@ class EmailForPasswordReset(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        associated_account = User.objects.filter(email=email).exists()
+        associated_account = User.objects.filter(email__iexact=email).exists()
         if associated_account:
             return email
 
