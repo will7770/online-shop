@@ -5,13 +5,31 @@
 {% block "cart_button" %}
 {% include "includes/cart_button.html" %}
 {% endblock  %}
+
 {% block "cart_modal" %}
 {% include "includes/cart_modal.html" %}
+{% endblock %}
+
+{% block "price_limit_form" %}
+{% include "includes/price_limit_form.html" %}
 {% endblock %}
 
 
 {% block content %}
 <div class="row">
+    <!-- Categories Dropdown -->
+    <div class="dropdown mb-2">
+        <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Categories
+        </button>
+        <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
+            {% tag_categories as categories %}
+            {% for category in categories %}
+                <li><a class="dropdown-item text-white" href="{% url "main:catalog" category.category_slug %}">{{category.name}}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
     <!-- Форма фильтров -->
     <div class="dropdown mb-2">
         <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
@@ -49,6 +67,21 @@
             {% if request.GET.order_by == '-price' %}checked{% endif %}>
             <label class="form-check-label" for="flexRadioDefault3">
                 Expensive to cheap
+            </label>
+        </div>
+
+        <div class="form-check text-white mx-3">
+            <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="rating"
+            {% if request.GET.order_by == 'rating' %}checked{% endif %}>
+            <label class="form-check-label" for="flexRadioDefault3">
+                Highest rating
+            </label>
+        </div>
+        <div class="form-check text-white mx-3">
+            <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-rating"
+            {% if request.GET.order_by == '-rating' %}checked{% endif %}>
+            <label class="form-check-label" for="flexRadioDefault3">
+                Lowest rating
             </label>
         </div>
         <button type="submit" class="btn btn-outline-success mx-3 mt-3">Apply</button>

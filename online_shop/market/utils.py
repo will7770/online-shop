@@ -2,6 +2,8 @@ from .models import Cart, Item
 from django.db.models import Q
 from django.contrib.postgres.search import SearchVector
 from django.core.cache import cache
+import pickle
+import hashlib
 
 
 def get_user_carts(request):
@@ -20,3 +22,11 @@ def query_search(query):
     
     qset = Item.objects.annotate(searchv=SearchVector('title', 'description')).filter(searchv=query)
     return qset
+
+
+def generate_catalog_cache_key(request, slug, page):
+    params = request.GET.items()
+    hashed = pickle.dumps(sorted(params))
+    digest = hashlib.sha256(hashed).hexdigest()
+
+    return f"cache:catalog:{slug}:{page}:{digest}"

@@ -80,23 +80,12 @@
 
     <section>
         <div class="container">
-            <div class="row mt-1 position-fixed z-3">
-                <!-- Categories Dropdown -->
-                <div class="dropdown mb-2">
-                    <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Categories
-                    </button>
-                    <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
-                        {% tag_categories as categories %}
-                        {% for category in categories %}
-                            <li><a class="dropdown-item text-white" href="{% url "main:catalog" category.category_slug %}">{{category.name}}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
+            <div class="row mt-1 position-fixed z-3" style="width: 200px;">
                 <!-- Cart Button -->
                 {% block "cart_button" %}{% endblock %}
+                
+                {% block "price_limit_form" %}{% endblock %}
+                
             </div>
         </div>
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Categories, Item, Cart
 from django.http import JsonResponse
-from .utils import query_search
+from .utils import query_search, generate_catalog_cache_key
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
@@ -19,23 +19,44 @@ def catalog(request, slug=None):
     on_sale = request.GET.get('on_sale', None)
     order_by = request.GET.get('order_by', 'id')
     query = request.GET.get('q', None)
+    price_min, price_max = request.GET.get('price_min', None), request.GET.get('price_max', None)
 
+    filters_per_request = 0
     slug = slug or 'all'
+
+    goods = Item.objects.all()
+    if slug != 'all':
+        goods = Item.objects.filter(category__category_slug=slug)
 
     if query:
         goods = query_search(query)
-    elif slug == 'all':
-        goods = Item.objects.all()
-    else:
-        goods = Item.objects.filter(category__category_slug=slug)
+
+    if price_min:
+        filters_per_request += 1
+        goods = goods.filter(price__gte=price_min)
+    if price_max:
+        filters_per_request += 1
+        goods = goods.filter(price__lte=price_max)
 
     if on_sale:
+        filters_per_request += 1
         goods = goods.filter(sale__gt=0)
     if order_by and order_by != "default":
+        filters_per_request += 1
         goods = goods.order_by(order_by)
 
+
+    # Cache pages that get accessed more often, skip edge cases with a lot of filters
     paginator = Paginator(goods, 3)
-    current_page = paginator.page(int(page))
+
+    if filters_per_request < 3:
+        key = generate_catalog_cache_key(request, slug, page)
+        current_page = cache.get(key)
+        if not current_page:
+            current_page = paginator.page(int(page))
+            cache.set(key, current_page, timeout=60*15)
+    else:
+        current_page = paginator.page(int(page))
 
     context = {
         'goods': current_page,
