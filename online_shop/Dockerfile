@@ -12,7 +12,6 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
-    supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -23,10 +22,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 
-RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-
 EXPOSE 8000
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+RUN chmod -x /core/entrypoint.web.sh
+CMD ["/core/entrypoint.web.sh"]

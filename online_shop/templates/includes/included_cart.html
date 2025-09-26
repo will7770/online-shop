@@ -2,7 +2,8 @@
 {% load tags %}
 
 {% display_cart_items request as carts %}
-{% for cart in carts %}
+
+{% for cart in carts.data %}
 <div class="card mb-3 text-bg-light shadow-lg">
     <div class="card-header">
         <h5 class="card-title">
@@ -54,8 +55,8 @@
 {% endfor %}
 <div class="card mb-3 shadow-lg">
     <div class="card-footer">
-        <p class="float-left">Total <strong>{{carts.total_items}}</strong> items for</p>
-        <h4 class="float-left"><strong>{{carts.total_price}}$</strong></h4>
+        <p class="float-left">Total <strong>{{carts.totals.total_count}}</strong> items for</p>
+        <h4 class="float-left"><strong>{{carts.totals.total_price}}$</strong></h4>
     </div>
 </div>
 {% if carts and '/order/' not in request.path %}

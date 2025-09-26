@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.db import transaction
-from django.db.models import F, Prefetch
+from django.db.models import F, Prefetch, FilteredRelation, Q
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 from reviews.forms import ReviewForm
@@ -26,7 +26,10 @@ def catalog(request, slug=None):
 
     goods = Item.objects.all()
     if slug != 'all':
-        goods = Item.objects.filter(category__category_slug=slug)
+        goods = Item.objects.annotate(
+            joined_category=FilteredRelation(relation_name='category', condition=Q(category__category_slug=slug))).filter(
+                joined_category__isnull=False
+            )
 
     if query:
         goods = query_search(query)
@@ -47,7 +50,7 @@ def catalog(request, slug=None):
 
 
     # Cache pages that get accessed more often, skip edge cases with a lot of filters
-    paginator = Paginator(goods, 3)
+    paginator = Paginator(goods, 9)
 
     if filters_per_request < 3:
         key = generate_catalog_cache_key(request, slug, page)

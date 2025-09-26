@@ -8,16 +8,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-load_dotenv()
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-DEBUG = os.getenv("DJANGO_DEBUG", False)
+# Loading the correct env
+if os.environ.get('DOCKER_ENV'):
+    print('Hello from docker!')
+    load_dotenv('.env.docker')
+else:
+    print('Hello definetely not from docker!')
+    load_dotenv()
 
-ALLOWED_HOSTS = ['*']
+
+# Main settings
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+DEBUG = os.getenv("DJANGO_DEBUG", False)
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,14 +34,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+
     'market',
     'users',
     'orders',
     'reviews',
+
+    "debug_toolbar"
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,9 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -153,10 +162,15 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-MEDIA_URL = '/images/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'images') 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
 
 
 # Misc
 AUTH_USER_MODEL = "users.User"
+
 PASSWORD_RESET_TIMEOUT=24*3600
+
+INTERNAL_IPS = [
+    '127.0.0.1'
+]

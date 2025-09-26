@@ -25,7 +25,7 @@ class Item(models.Model):
     price = models.DecimalField(blank = False, null = False, decimal_places=2, max_digits=8)
     description = models.CharField(max_length = 200, blank = False)
     quantity = models.IntegerField(blank = False)
-    image = models.ImageField(blank = True, null = True)
+    image = models.ImageField(upload_to='products', blank = True, null = True)
     rating = models.FloatField(blank = True, null=True)
     sale = models.DecimalField(default=0.00, max_digits=4, decimal_places=2, null=True)
     category = models.ForeignKey(to=Categories, on_delete=models.CASCADE, verbose_name='Category')
@@ -83,8 +83,5 @@ class Cart(models.Model):
         if self.user:
             return f"Cart: {self.user} / Contents: {self.contents.title} / Quantity: {self.quantity}"
         return f"Cart: Anonymous / Contents: {self.contents.title} / Quantity: {self.quantity}"
-    
-    def total_item_price(self):
-        return round(self.contents.sell_price() * self.quantity, 2)
     
     objects = CartQuery().as_manager()

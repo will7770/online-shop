@@ -19,7 +19,6 @@ from django.http import HttpResponse
 
 
 
-
 def register(request):
     if request.user.is_authenticated:
         return redirect(reverse("users:profile"))

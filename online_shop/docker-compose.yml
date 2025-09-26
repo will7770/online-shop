@@ -17,17 +17,41 @@ services:
 
   web:
     build: .
-    command: /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
     volumes:
       - ./:/core
+      - static_volume:/core/staticfiles
+      - media_volume:/core/media
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - .env.docker
+    environment:
+      - DOCKER_ENV=1
     depends_on:  
       - db
       - redis
 
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/core/staticfiles
+      - media_volume:/core/media
+    depends_on:
+      - web
+
+  celery_worker:
+    build: .
+    command: celery -A online_shop worker --loglevel=info
+    env_file:
+      - .env.docker
+    depends_on:
+      - redis
+      - db
+
 volumes:
   postgres_data:
   redis_data:
+  static_volume:
+  media_volume:
