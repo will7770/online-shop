@@ -12,16 +12,18 @@ Redis - cache and session storage, also a host for celery
 
 PostgreSQL - as the main database
 
-### Installation
+### Installation and config
 `git clone https://github.com/will7770/online-shop.git`
 
 
-Fill `.env.example` with neccesary data and rename to `.env`
+Create 2 files named `.env.docker` and `.env` by using `.env.example` as the template
+Use `.env` for your local development needs and `.env.docker` for production
 
+If you want to send real emails, go to `online_shop/settings.py` and change EMAIL_BACKEND
+
+### Running
 Proceed to project's directory
 
 `cd online_shop`
-
-If you want to send real emails, go to `online_shop/settings.py` and change EMAIL_BACKEND
 
 Run with `docker-compose up -d --build`
