@@ -5,8 +5,16 @@ body {
 	background-position: center center;
 	background-size: cover;
 	height: 100%;
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
   }
   
+main {
+	flex: 1;
+}
+
   .dropdown-toggle::after {
 	content: none;
   }

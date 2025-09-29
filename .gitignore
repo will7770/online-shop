@@ -7,7 +7,7 @@ media/
 
 *.pyc
 
-
+.env*
 *.pyo
 *.pyd
 .Python

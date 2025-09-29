@@ -78,36 +78,38 @@
         </nav>
     </header>
 
-    <section>
-        <div class="container">
-            <div class="row mt-1 position-fixed z-3" style="width: 200px;">
-                <!-- Cart Button -->
-                {% block "cart_button" %}{% endblock %}
-                
-                {% block "price_limit_form" %}{% endblock %}
-                
-            </div>
-        </div>
-
-    <!-- Cart Modal - Placed at root level -->
-    {% block "cart_modal" %}{% endblock "cart_modal" %}
-
-
-
-        <!-- Main Content -->
-        <div class="container">
-            <div class="row mt-1">
-                <div class="col-lg-2">
-                    <!-- Empty space -->
-                </div>
-                <div class="col-lg-10">
-                    <!-- Notifications block -->
-                    {% include "includes/notifications.html" %}
-                    {% block content %}{% endblock %}
+    <main>
+        <section>
+            <div class="container">
+                <div class="row mt-1 position-fixed z-3" style="width: 200px;">
+                    <!-- Cart Button -->
+                    {% block "cart_button" %}{% endblock %}
+                    
+                    {% block "price_limit_form" %}{% endblock %}
+                    
                 </div>
             </div>
-        </div>
-    </section>
+
+        <!-- Cart Modal - Placed at root level -->
+        {% block "cart_modal" %}{% endblock "cart_modal" %}
+
+
+
+            <!-- Main Content -->
+            <div class="container">
+                <div class="row mt-1">
+                    <div class="col-lg-2">
+                        <!-- Empty space -->
+                    </div>
+                    <div class="col-lg-10">
+                        <!-- Notifications block -->
+                        {% include "includes/notifications.html" %}
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     {% block footer %}{% endblock %}
 

@@ -2,4 +2,4 @@
 
 python manage.py collectstatic --noinput
 python manage.py migrate --noinput
-python -m gunicorn online_shop.wsgi:application --bind 0.0.0.0:8000 
+python -m gunicorn -c gunicorn.conf.py online_shop.wsgi:application
