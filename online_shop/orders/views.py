@@ -38,7 +38,7 @@ class CreateOrder(FormView, LoginRequiredMixin):
                         payment_on_get = form.cleaned_data.get('payment_on_get'),
                     )
                     new_orders = []
-                    for cart in user_cart:
+                    for cart in user_cart.select_related('contents').select_for_update():
                         if cart.quantity >= cart.contents.quantity:
                             raise ValidationError(f"There is no more {cart.contents.title} in stock, please try again.")
                         

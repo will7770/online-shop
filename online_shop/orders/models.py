@@ -1,6 +1,13 @@
 from django.db import models
 from users.models import User
 from market.models import Item
+from django.db.models import Sum
+
+
+class OrderStatus(models.TextChoices):
+    VERIFICATION = 'VF', 'Verification'
+    DELIVERY = 'DV', 'Delivering'
+    READY = 'RD', 'Ready'
 
 
 class Order(models.Model):
@@ -11,7 +18,7 @@ class Order(models.Model):
     delivery_address = models.TextField(null=True, blank=True)
     payment_on_get = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
-    status = models.CharField(max_length=50, default='In process')
+    status = models.CharField(choices=OrderStatus.choices, default=OrderStatus.VERIFICATION)
 
     class Meta:
         db_table = 'orders'
@@ -19,6 +26,10 @@ class Order(models.Model):
     def __str__(self):
         return f"Order №{self.pk} / buyer: {self.user.first_name if self.user.first_name else self.user.username}"
     
+    @property
+    def get_readable_status(self):
+        return OrderStatus(self.status).label
+
 
 class OrderItemQueryset(models.QuerySet):
     

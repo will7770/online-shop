@@ -36,6 +36,7 @@ class Item(models.Model):
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
 
+
     def __str__(self):
         return self.title
     

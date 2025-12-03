@@ -16,7 +16,7 @@ from .utils import generate_password_reset_token, verify_token
 from django.conf import settings
 from django.core.mail import send_mail
 from django.http import HttpResponse
-
+from django.db import transaction
 
 
 def register(request):
@@ -118,22 +118,22 @@ def confirm_email(request):
             if task_async_result:
                 code = cache.get(task_async_result)
                 if int(code) == form.cleaned_data['verification_code']:
-                    session_key = request.session.session_key
-                    new_user = User.objects.create_user(
-                        username=temp_auth_data.get('username'),
-                        password=temp_auth_data.get('password'),
-                        email=temp_auth_data.get('email')
-                    )
-                    if session_key:
-                        Cart.objects.filter(session_key=session_key).update(user=new_user)
+                    with transaction.atomic:
+                        session_key = request.session.session_key
+                        new_user = User.objects.create_user(
+                            username=temp_auth_data.get('username'),
+                            password=temp_auth_data.get('password'),
+                            email=temp_auth_data.get('email')
+                        )
+                        if session_key:
+                            Cart.objects.filter(session_key=session_key).update(user=new_user)
 
-                    auth.login(request, new_user)
-                    # cleanups
-                    request.session.pop('temp_auth_data')
-                    cache.delete(task_async_result)
-                    task_async.forget()
-
-                    return redirect(reverse("main:catalog_default"))
+                        auth.login(request, new_user)
+                        # cleanups
+                        request.session.pop('temp_auth_data')
+                        cache.delete(task_async_result)
+                        task_async.forget()
+                        return redirect(reverse("main:catalog_default"))
 
         request.session.pop('temp_auth_data')
         context = {"form": form}

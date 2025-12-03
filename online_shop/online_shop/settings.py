@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'orders',
     'reviews',
 
-    "debug_toolbar"
+    "debug_toolbar",
+    
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +84,8 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
 import dj_database_url
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', 'sqlite:///db.sqlite3')
+        default=os.getenv('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        conn_max_age=600
     )
 }
 
@@ -102,16 +105,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL", "redis://redis:6379/0"), 
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
+# Caching config
+if os.getenv('USE_CACHE'):
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": os.getenv("REDIS_URL", "redis://redis:6379/0"), 
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            },
+        }
     }
-} 
+else:
+    CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.DummyCache",
+        }
+    }
 
 # Django sessions config
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
